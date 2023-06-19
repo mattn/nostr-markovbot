@@ -3,7 +3,7 @@
 FROM golang:1.20-alpine AS build-dev
 WORKDIR /go/src/app
 COPY --link go.mod go.sum ./
-RUN apk add --no-cache upx gcc musl-dev || \
+RUN apk add --no-cache upx || \
     go version && \
     go mod download
 COPY --link . .
@@ -12,5 +12,5 @@ RUN [ -e /usr/bin/upx ] && upx /go/bin/nostr-markovbot || echo
 FROM scratch
 COPY --link --from=build-dev /go/bin/nostr-markovbot /go/bin/nostr-markovbot
 COPY --from=build-dev /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
-CMD ["/go/bin/nostr-markovbot"]
+ENTRYPOINT ["/go/bin/nostr-markovbot"]
 
