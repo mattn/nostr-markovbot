@@ -163,7 +163,7 @@ func run(dryrun bool, word string) error {
 func main() {
 	var ver bool
 	var dryrun bool
-	flag.BoolVar(&ver, "v", false, "show version")
+	flag.BoolVar(&ver, "version", false, "show version")
 	flag.BoolVar(&dryrun, "dryrun", false, "dryrun")
 	flag.Parse()
 
