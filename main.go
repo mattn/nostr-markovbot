@@ -47,6 +47,24 @@ func contains(a []string, s string) bool {
 	return false
 }
 
+var ngWords *regexp.Regexp
+
+func init() {
+	words := os.Getenv("MARKOVBOT_NGWORDS")
+	if words != "" {
+		ngWords = regexp.MustCompile(words)
+	}
+}
+
+func hasNgWords(line string) bool {
+	if ngWords != nil {
+		if ngWords.MatchString(line) {
+			return true
+		}
+	}
+	return false
+}
+
 func run(dryrun bool, word string) error {
 	length := -1
 
@@ -75,6 +93,9 @@ func run(dryrun bool, word string) error {
 	for _, ev := range evs {
 		for _, line := range strings.Split(ev.Content, "\n") {
 			if !reJapanese.MatchString(line) {
+				continue
+			}
+			if hasNgWords(line) {
 				continue
 			}
 			m.Update(strings.TrimSpace(line))
