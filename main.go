@@ -75,7 +75,7 @@ func run(dryrun bool, word string) error {
 
 	filter := nostr.Filter{
 		Kinds: []int{nostr.KindTextNote},
-		Limit: 100,
+		Limit: 200,
 	}
 	relay, err := nostr.RelayConnect(context.Background(), "wss://relay-jp.nostr.wirednet.jp/")
 	if err != nil {
