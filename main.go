@@ -88,6 +88,18 @@ func run(dryrun bool, word string) error {
 		return err
 	}
 
+	reURL, err := regexp.Compile(`\bhttps?://[^?\s]+`)
+	if err != nil {
+		return err
+	}
+	imageSuffixes := []string{
+		".png",
+		".jpeg",
+		".jpg",
+		".gif",
+		".bmp",
+	}
+
 	found := false
 	m := markov.New()
 	for _, ev := range evs {
@@ -98,6 +110,21 @@ func run(dryrun bool, word string) error {
 			if hasNgWords(line) {
 				continue
 			}
+
+			found := false
+		ignore:
+			for _, u := range reURL.FindAllString(line, -1) {
+				for _, suffix := range imageSuffixes {
+					if strings.HasSuffix(u, suffix) {
+						found = true
+						break ignore
+					}
+				}
+			}
+			if found {
+				continue
+			}
+
 			m.Update(strings.TrimSpace(line))
 			found = true
 		}
