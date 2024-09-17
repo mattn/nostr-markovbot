@@ -149,6 +149,7 @@ func run(dryrun bool, ignoresFile string, word string) error {
 				continue
 			}
 
+			log.Println(ev.PubKey, line)
 			m.Update(strings.TrimSpace(line))
 			found = true
 		}
