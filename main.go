@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"context"
 	_ "embed"
 	"errors"
@@ -9,6 +10,7 @@ import (
 	"log"
 	"os"
 	"regexp"
+	"slices"
 	"strings"
 
 	"github.com/ikawaha/kagome-dict/uni"
@@ -36,6 +38,8 @@ var (
 		"wss://relay.nostrich.land",
 		"wss://nostr.h3z.jp",
 	}
+
+	ignores = []string{}
 )
 
 func contains(a []string, s string) bool {
@@ -65,7 +69,7 @@ func hasNgWords(line string) bool {
 	return false
 }
 
-func run(dryrun bool, word string) error {
+func run(dryrun bool, ignoresFile string, word string) error {
 	length := -1
 
 	nsec := os.Getenv("MARKOVBOT_NSEC")
@@ -73,6 +77,23 @@ func run(dryrun bool, word string) error {
 		log.Fatal("MARKOVBOT_NSEC is required")
 	}
 
+	// load ignores.txt
+	f, err := os.Open(ignoresFile)
+	if err == nil {
+		defer f.Close()
+
+		scanner := bufio.NewScanner(f)
+		for scanner.Scan() {
+			text := scanner.Text()
+			if strings.HasPrefix(text, "#") {
+				continue
+			}
+			tok := strings.Split(text, " ")
+			if len(tok) >= 1 {
+				ignores = append(ignores, tok[0])
+			}
+		}
+	}
 	filter := nostr.Filter{
 		Kinds: []int{nostr.KindTextNote},
 		Limit: 200,
@@ -100,9 +121,12 @@ func run(dryrun bool, word string) error {
 		".bmp",
 	}
 
-	found := false
 	m := markov.New()
 	for _, ev := range evs {
+		if isIgnoreNpub(ev.PubKey) {
+			continue
+		}
+
 		for _, line := range strings.Split(ev.Content, "\n") {
 			if !reJapanese.MatchString(line) {
 				continue
@@ -128,9 +152,6 @@ func run(dryrun bool, word string) error {
 			m.Update(strings.TrimSpace(line))
 			found = true
 		}
-	}
-	if !found {
-		return nil
 	}
 
 	t, err := tokenizer.New(uni.Dict(), tokenizer.OmitBosEos())
@@ -208,10 +229,29 @@ func run(dryrun bool, word string) error {
 	return nil
 }
 
+func isIgnoreNpub(pub string) bool {
+	npub, err := nip19.EncodePublicKey(pub)
+	if err != nil {
+		return false
+	}
+	return slices.ContainsFunc(ignores, func(is string) bool {
+		return is == npub
+	})
+}
+
+func env(name string, def string) string {
+	if val := os.Getenv(name); val != "" {
+		return val
+	}
+	return def
+}
+
 func main() {
 	var ver bool
+	var ignoresFile string
 	var dryrun bool
 	flag.BoolVar(&ver, "version", false, "show version")
+	flag.StringVar(&ignoresFile, "ignores", env("IGNORES", "ignores.txt"), "path to ignores.txt")
 	flag.BoolVar(&dryrun, "dryrun", false, "dryrun")
 	flag.Parse()
 
@@ -220,7 +260,7 @@ func main() {
 		os.Exit(0)
 	}
 
-	if err := run(dryrun, flag.Arg(0)); err != nil {
+	if err := run(dryrun, ignoresFile, flag.Arg(0)); err != nil {
 		log.Fatal(err)
 	}
 }
