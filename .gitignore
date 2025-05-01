@@ -2,3 +2,5 @@ nostr-markovbot
 nostr-markovbot.exe
 *.yaml
 *.sh
+*.cmd
+*.bat
