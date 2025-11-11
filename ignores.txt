@@ -6,6 +6,7 @@ npub139yaucycwszrr5h9q9n0dej6fsgfxfk2xlnxl46wgtqr0vug9wnsaa6gyk # コピーロ�
 npub13ju2rwqye3ayslwd3wg025zzejsvx3nuzsqce4rm3m6u2cemtv7q2sj7ku # Quinn Holloway
 npub13m8de70e6jr22np6elxqckgfpu7hszaduk867rmwhzpe2j3a2g2sh7qde2 # TESTNET•GIT•BAK
 npub13x84n5fd7clcnkz3vlyf4hz6a736klmt9xw30fq3838zd8kg5mes09ndr4 # Oka Genm
+npub13y0txj4x7ztqjlduvx3fa0ypvmavmqm9m5u289gnk8lezczv0caq80m4gf # おもち
 npub13z3xmpdc0366wnt9valywxxyzmq3373rzgsk7gam02mem74jy95q6ghnlq # ビットバンクプラス マーケット速報
 npub14cklgree5w09ju4f36dw55rgn78gzy4an6pnjcsz48ttjw7v050sv5jptq # GaySexSpyVoyeur(NSFW🔞)
 npub14htwadwsnle0d227mptfy6r7pcwl7scs3dhwvnmagd8u7s5rg6vslde86r # wordcloud
@@ -114,12 +115,14 @@ npub1u6j0u5aakylx0qp2wl8g0rmvfhhlp4vdl8f3g23n8wfqgx4faw5qvsq7z8 # BaronBurdock
 npub1u8yh9vr2dcv20qctut4fy89d73pz2h4vuuyaw5urgppfyt9yqdwq3j6k4m # Darius Huxley
 npub1udeepgra7f9mrmlafp4etzt9zmngh4ty9kzcr8t63fd884w3q55q44nr33 # Milo Grieves
 npub1uds3k0dqcjecsp0qglz5gzjh32z0pulrdnkg84m8e66y4st9kuwqxdyku7 # NutriYogi
+npub1v0n07lxqt5aqnw66zjl0zlttp6449d9p7e434c3tl004pphwhuhs6ah9e9 # 紫苑紫苑
 npub1v20fahsh44msy4ty7amjrcr6v79t6mddkfdtx06mxgrqdzs29ktsgnsdcc # Ava Jorin
 npub1v3yq3kjrz80ghjuxn5c7xk56rnd295ffwzdj3kpe7gj2x7v2gx9qkawmx0 # Nora Havelock
 npub1v75w6lnkc7derm3nvddd45rnl9rxkvh0yyeh8taj7vcdlta8plmqdp2g4e # Golang News
 npub1vjkvlkvx7c5va0n398yhhvs5zc0pcrya3r8cggca8x688ll0eduqjv4qth # Icarus Grimwood
 npub1vrt2kv03nalz66x5hwj5ezar2ua7vdq08ure3243ly8wwd0kdc7s9qk6yx # 
 npub1vunr7c6v9ed8v6qg2dz5w8xaha4c52vumq745zhhv6rtlv0vu44suj8sw9 # nostarou
+npub1vz7qlc457xxcr2us3zt64gdvss4fnpgm7684vtfafmd7zx26mmcqucr0q9 # #Ralphtan 🦁 / #らる🦁🎗️⚡️♿︎
 npub1w3w2x7zshh046wrzzq5m8c6sh6qmv4wkmw7hq6mzlgq55zxk0nwqcqsvkk # Felix Harkins
 npub1w7g33p5hrljhnl37f7gdnhr7j87dwjzsms59x6qllutk2jepszgs65t8dc # ビットコインの推奨手数料を通知するボット
 npub1wavsw9qaw5unehjx37x23jj972js3vty77aygm2cg6umpue9dp4sad7ejv # TESTNET•GIT•BAG
@@ -133,6 +136,7 @@ npub1x8x5c2cpyatcanpuqq3zl7wdatxzqm5gssccum4qg3tek4407hasvahs7h # Harlan Quinsy
 npub1x99pfthj7gsfh4nygqrrry2glrjlq52c2sp7lw30tlr78n3qgs3smj6agh # Zara Hargrove
 npub1xcd3uz43jazshaqty0ephe3xhnqruf7u9m8gjvw5t93j2rmp8sks8tl23l # こていたんえんしゅうぼっと
 npub1xm9j2a92fzck98kufj2qaddhef27e5vzh3d67ytkvxc9vnfm9h4sd5yqjh # 魔界塔士Bit・Co
+npub1xr4jdgh7htsuraq8y34pufv3kc5mz2h9h0r9lv9a9t0xeuctvp6smrfyy8 #  日本語JLPT文法
 npub1xwex5vf0zk2wchupussp4h5gh8p9vs798vry9vlm7y25c8593g3svereh9 # Quirk
 npub1xzmuglkf5hjk40gd06shr8n5tmuqcwaypqdk6ya2ng6v4waa637savp7s0 # 
 npub1y2zacad0zm7ug9jeqn6w5900h7hmele40dr45a685uw6hxnxkyyqscst94 # Yara Hyland

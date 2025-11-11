@@ -3,6 +3,7 @@ VERSION := $$(make -s show-version)
 CURRENT_REVISION := $(shell git rev-parse --short HEAD)
 BUILD_LDFLAGS := "-s -w -X main.revision=$(CURRENT_REVISION)"
 GOBIN ?= $(shell go env GOPATH)/bin
+SHELL=/bin/bash
 export GO111MODULE=on
 
 .PHONY: all
@@ -59,3 +60,10 @@ upload: $(GOBIN)/ghr
 
 $(GOBIN)/ghr:
 	go install github.com/tcnksm/ghr@latest
+
+update:
+	@curl -s https://raw.githubusercontent.com/nostr-jp/botlist/refs/heads/main/botlist.json | jq -r -c '.[]' | while read -r line; do \
+	  PUBKEY=$$(jq -r '.pubkey' <<<"$$line"); \
+	  NAME=$$(jq -r '.name' <<<"$$line" | tr -d '\n' | sed -e 's!^null$$!!'); \
+	  echo "$$PUBKEY # $$NAME"; \
+	done
