@@ -61,9 +61,10 @@ upload: $(GOBIN)/ghr
 $(GOBIN)/ghr:
 	go install github.com/tcnksm/ghr@latest
 
+.PHONY: update
 update:
-	@curl -s https://raw.githubusercontent.com/nostr-jp/botlist/refs/heads/main/botlist.json | jq -r -c '.[]' | while read -r line; do \
+	@curl -s https://nostr-jp.github.io/botlist/botlist.json | jq -r -c '.[]' | while read -r line; do \
 	  PUBKEY=$$(jq -r '.pubkey' <<<"$$line"); \
 	  NAME=$$(jq -r '.name' <<<"$$line" | tr -d '\n' | sed -e 's!^null$$!!'); \
 	  echo "$$PUBKEY # $$NAME"; \
-	done
+	done > ignores.txt
