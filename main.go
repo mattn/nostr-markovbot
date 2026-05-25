@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"context"
 	_ "embed"
+	"encoding/json"
 	"errors"
 	"flag"
 	"fmt"
@@ -12,11 +13,13 @@ import (
 	"regexp"
 	"slices"
 	"strings"
+	"time"
 
 	"github.com/ikawaha/kagome-dict/uni"
 	"github.com/ikawaha/kagome/v2/tokenizer"
 	markov "github.com/mattn/go-markov"
 	"github.com/nbd-wtf/go-nostr"
+	"github.com/nbd-wtf/go-nostr/nip05"
 	"github.com/nbd-wtf/go-nostr/nip19"
 )
 
@@ -109,6 +112,8 @@ func run(dryrun bool, ignoresFile string, word string) error {
 		return err
 	}
 
+	verified := verifyNip05Authors(context.Background(), relay, evs)
+
 	reURL, err := regexp.Compile(`\bhttps?://[^?\s]+`)
 	if err != nil {
 		return err
@@ -124,6 +129,9 @@ func run(dryrun bool, ignoresFile string, word string) error {
 	m := markov.New()
 	for _, ev := range evs {
 		if isIgnoreNpub(ev.PubKey) {
+			continue
+		}
+		if !verified[ev.PubKey] {
 			continue
 		}
 
@@ -228,6 +236,65 @@ func run(dryrun bool, ignoresFile string, word string) error {
 		relay.Close()
 	}
 	return nil
+}
+
+// verifyNip05Authors fetches kind:0 metadata for all distinct authors in evs
+// and returns the set of pubkeys whose NIP-05 identifier resolves back to the
+// same pubkey.
+func verifyNip05Authors(ctx context.Context, relay *nostr.Relay, evs []*nostr.Event) map[string]bool {
+	verified := map[string]bool{}
+
+	authors := map[string]struct{}{}
+	for _, ev := range evs {
+		authors[ev.PubKey] = struct{}{}
+	}
+	if len(authors) == 0 {
+		return verified
+	}
+	pubkeys := make([]string, 0, len(authors))
+	for k := range authors {
+		pubkeys = append(pubkeys, k)
+	}
+
+	metaCtx, metaCancel := context.WithTimeout(ctx, 15*time.Second)
+	defer metaCancel()
+	metaEvs, err := relay.QuerySync(metaCtx, nostr.Filter{
+		Kinds:   []int{nostr.KindProfileMetadata},
+		Authors: pubkeys,
+	})
+	if err != nil {
+		log.Println("metadata fetch failed:", err)
+		return verified
+	}
+
+	latest := map[string]*nostr.Event{}
+	for _, ev := range metaEvs {
+		if cur, ok := latest[ev.PubKey]; !ok || ev.CreatedAt > cur.CreatedAt {
+			latest[ev.PubKey] = ev
+		}
+	}
+
+	for pubkey, ev := range latest {
+		var profile struct {
+			Nip05 string `json:"nip05"`
+		}
+		if err := json.Unmarshal([]byte(ev.Content), &profile); err != nil {
+			continue
+		}
+		if profile.Nip05 == "" {
+			continue
+		}
+		qCtx, qCancel := context.WithTimeout(ctx, 5*time.Second)
+		pp, err := nip05.QueryIdentifier(qCtx, profile.Nip05)
+		qCancel()
+		if err != nil || pp == nil {
+			continue
+		}
+		if pp.PublicKey == pubkey {
+			verified[pubkey] = true
+		}
+	}
+	return verified
 }
 
 func isIgnoreNpub(pub string) bool {
